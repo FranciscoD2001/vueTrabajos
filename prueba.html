@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Vue js
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,
+        initial-scale=1">
+        <script src="https://unpkg.com/vue@3"></script>
+    </head>
+    <body>
+        <div id="contenedor">
+
+            <form>
+                <fieldset>
+                    <legend>
+                        Acceso al panel
+                    </legend>
+
+                    <label>
+                        Correo Electronico
+                    </label>
+
+                    <input type="email" v-model="email" name="">
+
+                    <label>
+                        Password
+                    </label>
+                    <input type="password" v-model="password" name="">
+
+                    <button @click="login">
+                        Acceder
+                    </button>
+                </fieldset>
+            </form>
+
+            <!-- <h1>
+                {{ name }}
+            </h1>
+
+            <input type="text" v-model="name" name="">
+
+            <button @click="saludar">
+                Click me
+            </button> -->
+
+            <!-- <hr>
+
+            <input type="text" v-model="num1" num1="">
+
+            <input type="text" v-model="num2" num2="">
+
+            <h1>
+                {{resultado}}
+            </h1>
+
+            <button @click="calcular">
+                Calcular Resultado
+            </button>
+
+            <hr>
+
+            <input type="text" v-model="edad" edad="">
+
+            <h1 v-if="edad < 18">
+                No pase
+            </h1>
+
+            <h1 v-else>
+                Pase
+            </h1>
+
+            <ol>
+                <li v-for="item in Personas">
+                    {{item.name}} : <span> {{item.rol}} </span>
+                </li>
+            </ol>
+
+            <h1>
+                Registrar una nueva persona
+            </h1>
+
+            <input type="text" v-model="nombre" nombre="">
+
+            <input type="text" v-model="rol" rol="">
+
+            <button @click="guardar">
+                Guaradr persona
+            </button> -->
+
+        </div>
+        
+        <script type="text/javascript">
+            const { createApp } = Vue
+
+            const data = null
+            const error = null
+
+            
+
+            const app = createApp({
+                data(){
+                    return {
+                        users: null,
+                        email: '',
+                        password: ''
+                        // num1: 0,
+                        // num2: 0, 
+                        // resultado: 0,
+                        // edad: 0,
+                        // Personas: [
+                        //     {name:'Kirad', rol:'hacker'},
+                        //     {name:'Achoy', rol:'conductor'},
+                        //     {name:'Diego', rol:'deportista'}
+                        // ],
+                        // nombre: '',
+                        // rol: ''                    
+                    }
+                },
+                methods: {
+                    login(e){
+                        e.preventDefault();
+
+                        var emailUser = this.email
+                        var passwordUser = this.password
+
+                        var access = this.users.map(function(u){
+
+                            if( emailUser.toLowerCase === u.email.toLowerCase() ){
+                                if( passwordUser === u.password ){
+                                    alert("Iniciaste sesión"+u.id)
+                                    return true
+                                }
+                            }
+
+                        })
+                        console.log(access)
+                    }
+                //     saludar(){
+                //         alert('Hola' + this.name)
+                //     },
+                //     calcular(){
+                //         this.resultado = parseInt(this.num1) + parseInt(this.num2)
+                //     },
+                //     guardar(){
+                //             this.Personas.push({name:this.nombre,rol:this.rol})
+                //     }
+                },
+                mounted(){
+                    fetch('users.json')
+                .then((res) => res.json())
+                .then((json) => (this.users = json))
+                .catch((err) => (console.log(err) ))
+                }
+            }).mount('#contenedor')
+
+        </script>
+    </body>
+</html>
