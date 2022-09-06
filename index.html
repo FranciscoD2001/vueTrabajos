@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue - Inicio de sesion</title>
+
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+    <div id="contenedor" style="align-items: center; width: 750px; margin: 100px;">
+        <h1 style="color: #8a2be2;;">Dashboard</h1>
+        <form style="background-color: #c07dff;">
+            <fieldset>
+                <legend style="color: white;">
+                    Inicio de sesión
+                </legend>
+                <input type="email" placeholder="Correo electrónico" v-model="email">
+                <br>
+                <br>
+                <input type="password" placeholder="Contraseña" v-model="password">
+                <br>
+                <br>
+                <button @click="login" style="background-color: #8a2be2; color: white; border: none; border-radius: 5px;">Login</button>
+            </fieldset>
+        </form>
+    </div>
+    <script type="text/javascript">
+        const {createApp} = Vue;
+        var miStorage = window.localStorage;
+        const data = null;
+        const error = null;
+        
+        const app = createApp({
+            data(){
+                return{
+                    users:null,
+                    email:"",
+                    password:"",
+                    mensaje:""
+                }
+            },
+            methods:{
+                login(e){
+                    e.preventDefault();
+                    var nombre2;
+                    var username2;
+                    var correo;
+                    var mail = this.email;
+                    var pass = this.password;
+                    var log = false;
+                    var access = this.users.map(function(u){
+                        console.log(mail);
+                        if(mail.toLowerCase() === u.email.toLowerCase()){
+                            if(pass === u.password){
+                                nombre2 = u.name;
+                                username2 = u.username;
+                                correo = u.email;
+                                log = true;
+                            }
+                        }
+                    })
+                    if(log){
+                        localStorage.setItem("name", nombre2);
+                        localStorage.setItem("username", username2);
+                        localStorage.setItem("email", correo);
+                        window.location.href = "dashboard.html";
+                    }else{
+                        alert("Fallo al iniciar sesión, intentelo de nuevo");
+                    }
+                }
+            },
+            mounted(){
+                fetch("users.json")
+                .then((res)=>res.json())
+                .then((json)=>(this.users = json))
+                .catch((err)=>(console.log(err)));
+            }
+        }).mount("#contenedor")
+    </script>
+</body>
+</html>

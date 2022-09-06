@@ -10,24 +10,33 @@
         <script src="https://unpkg.com/vue@3"></script>
     </head>
     <body>
-        <div id="contenedor">
+        <div id="contenedor"; style="background-color: #8a2be2">
 
-            <form>
+            <form >
                 <fieldset>
-                    <legend>
+                    <legend style="color: white;">
                         Acceso al panel
                     </legend>
 
-                    <label>
+                    <label style="color: white;">
                         Correo Electronico
                     </label>
 
+                    <br>
+
                     <input type="email" v-model="email" name="">
 
-                    <label>
+                    <br>
+
+                    <label style="color: white;">
                         Password
                     </label>
+
+                    <br>
+
                     <input type="password" v-model="password" name="">
+                    
+                    <br>
 
                     <button @click="login">
                         Acceder
@@ -90,6 +99,28 @@
             </button> -->
 
         </div>
+
+        <br>
+
+        <div id="contenedor2"; style="background-color: #8a2be2">
+
+            <h1 style="color: white;">
+                User List
+            </h1>
+
+            <br>
+
+            <tr v-for="item in items" v-bind:key="item.id">
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.username }}</td>
+                <td>{{ item.email }}</td>
+             </tr>
+
+            <button @click="Add new User"; style="background-color: #179719; color: white;">
+                Guardar persona
+            </button>
+
+        </div>
         
         <script type="text/javascript">
             const { createApp } = Vue
@@ -143,9 +174,9 @@
                 //     calcular(){
                 //         this.resultado = parseInt(this.num1) + parseInt(this.num2)
                 //     },
-                //     guardar(){
-                //             this.Personas.push({name:this.nombre,rol:this.rol})
-                //     }
+                    //     guardar(){
+                    //             this.Personas.push({name:this.nombre,rol:this.rol})
+                    //     }
                 },
                 mounted(){
                     fetch('users.json')

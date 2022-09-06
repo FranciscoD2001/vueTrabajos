@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de usuarios</title>
+
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+    <div id="contenedor" style="background-color: #8a2be2; color: white; width: 500px;">
+        <span>Welcome</b></span>
+        <br>
+        <h3>User List</h3>
+        <table>
+            <thead style="background-color: grey;">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="user in users" :key="user.id" style="font-size: 12px; background-color: #b96dff;">
+                    <td>{{user.id}}</td>
+                    <td>{{user.name}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <a href="index.html">
+            <button style="background-color: red; color: white; border: none; border-radius: 5px; ">Log Out</button>
+        </a>
+        
+    </div>
+    <script type="text/javascript">
+        const {createApp} = Vue;
+        var miStorage = window.localStorage;
+       
+        const data = null;
+        const error = null;
+
+        const app = createApp({
+            data(){
+                return{
+                    users: [],
+                    user: JSON.parse(sessionStorage.getItem("user")),
+                }
+            },
+            mounted(){
+                fetch("users.json")
+                .then((res)=>res.json())
+                .then((json)=>(this.users = json))
+                .catch((err)=>(console.log(err)));
+            }
+        }).mount("#contenedor")
+    </script>
+</body>
+</html>
