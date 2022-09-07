@@ -7,9 +7,10 @@
     <title>Dashboard de usuarios</title>
 
     <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
-    <div id="contenedor" style="background-color: #8a2be2; color: white; width: 500px;">
+    <div id="contenedor" v-if="!mostrarTabla" style="background-color: #8a2be2; color: white; width: 850px;">
         <span>Welcome</b></span>
         <br>
         <h3>User List</h3>
@@ -20,14 +21,25 @@
                     <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>Phone</th>
+                    <th>Website</th>
+                    <th>Company</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in users" :key="user.id" style="font-size: 12px; background-color: #b96dff;">
+                <tr v-for="user in users" style="font-size: 12px; background-color: #b96dff;">
                     <td>{{user.id}}</td>
                     <td>{{user.name}}</td>
                     <td>{{user.username}}</td>
                     <td>{{user.email}}</td>
+                    <td>{{user.phone}}</td>
+                    <td>{{user.website}}</td>
+                    <td>{{user.company.name}}</td>
+                    <td>
+                        <button @click="accion('editar', user)" style="background-color: rgb(0, 30, 255); color: white; border: none; border-radius: 5px; ">Edit</button>
+                        <button @click="destroyUser(user.id)" style="background-color: red; color: white; border: none; border-radius: 5px; ">Delate</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -35,7 +47,79 @@
         <a href="index.html">
             <button style="background-color: red; color: white; border: none; border-radius: 5px; ">Log Out</button>
         </a>
-        
+        <button @click="accion('agregar',null)" style="background-color: red; color: white; border: none; border-radius: 5px; ">Add User</button>
+    </div> 
+
+    <div v-if="mostrarTabla" style="background-color: #f09558; color: white; width: 850px;">
+        <!-- <h1 v-if="action=='agregar'" class="titulo-tabla">Agregar usuario nuevo</h1>
+        <h1 v-else-if="action=='editar'" class="titulo-tabla">Editar usuario existente</h1> -->
+        <div>
+            <h4>Data user</h4>
+            <div>
+                <label>Name</label>
+                <div>
+                  <input type="text" name="name" placeholder="Name" v-model="formUser.name">
+                </div>
+            </div>
+            <div>
+                <label>Username</label>
+                <div>
+                  <input type="text" name="username" placeholder="Username" v-model="formUser.username">
+                </div>
+            </div>
+            <div>
+                <label>Email</label>
+                <div>
+                  <input type="text" name="email" placeholder="Email" v-model="formUser.email">
+                </div>
+            </div>
+            <div>
+                <label>Password</label>
+                <div>
+                  <input type="password" name="password" placeholder="Password" v-model="formUser.password">
+                </div>
+            </div>
+            <div>
+                <label>Phone</label>
+                <div>
+                  <input type="text" name="phone" placeholder="Phone" v-model="formUser.phone">
+                </div>
+            </div>
+            <div>
+                <label>Website</label>
+                <div>
+                  <input type="text" name="website" placeholder="Website" v-model="formUser.website">
+                </div>
+            </div>
+
+            <h4>Data company</h4>
+            <div>
+                <label>Name</label>
+                <div>
+                  <input type="text" name="name" placeholder="Name Company" v-model="formUser.company.name">
+                </div>
+            </div>
+            <div>
+                <label>Cath Phrase</label>
+                <div>
+                  <input type="text" name="catchPhrase" placeholder="catchPhrase" v-model="formUser.company.catchPhrase">
+                </div>
+            </div>
+            <div>
+                <label>BS</label>
+                <div>
+                  <input type="text" name="bs" placeholder="bs" v-model="formUser.company.catchPhrase">
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <div>
+            <div>
+                <button @click="mostrarForm" style="background-color: red; color: white; border: none; border-radius: 5px;">Cancel</button>
+                <button @click="guardar" style="background-color: green; color: white; border: none; border-radius: 5px;">Save user</button>
+            </div>
+        </div>
     </div>
     <script type="text/javascript">
         const {createApp} = Vue;
@@ -49,7 +133,107 @@
                 return{
                     users: [],
                     user: JSON.parse(sessionStorage.getItem("user")),
+                    formUser: {
+                        id: '',
+                        name: '',
+                        username: "",
+                        password: "",
+                        email: "",
+                        phone: "",
+                        website: "",
+                        company: {
+                            name: "",
+                            catchPhrase: "",
+                            bs: ""
+                        }
+                    },
+                    mostrarTabla: true,
+                    action: "",
+                    show: "table"
                 }
+            },
+            methods:{
+                mostrarForm(){
+                    this.mostrarTabla = this.mostrarTabla ? false : true;
+                },
+                accion(act, user){
+                    this.action = act;
+                    this.show = "form";
+                    this.formUser();
+                    if(this.action == "agregar"){
+                        mostrarTabla = true;
+                        console.log("Agregar usuario");
+                        
+                    }
+                    else if(this.action == "editar"){
+                        this.formUser.id = user.id;
+                        this.formUser.name = user.name;
+                        this.formUser.username = user.username;
+                        this.formUser.email = user.email;
+                        this.formUser.password = user.password;
+                        this.formUser.phone = user.phone;
+                        this.formUser.website = user.website;
+                        this.formUser.company.name = user.company.name;
+                        this.formUser.company.catch = user.company.catchPhrase;
+                        this.formUser.company.bs = user.company.bs;
+                    }
+                },
+                guardar(){
+                    if(this.action == "agregar"){
+                        this.users.forEach(user => {
+                            if(user.id > this.formUser.id){
+                                this.formUser.id = user.id;
+                            }
+                        });
+                        this.users.push({
+                            id: this.formUser.id + 1,
+                            name: this.formUser.name,
+                            username: this.formUser.username,
+                            password: this.formUser.password,
+                            email: this.formUser.email,
+                            phone: this.formUser.phone,
+                            website: this.formUser.website,
+                            company:{
+                                name: this.formUser.company.name,
+                                catchPhrase: this.formUser.company.catchPhrase,
+                                bs: this.formUser.company.bs
+                            }
+                        });
+
+                        swal("Usuario agregado", "Se agrego el usuario exitosamente", "success");
+                    }
+                    else if(this.action == "editar"){
+                        this.users.forEach(user => {
+                            if(user.id == this.formUser.id){
+                                user.name = this.formUser.nombre;
+                                user.username = this.formUser.username;
+                                user.email = this.formUser.email;
+                                user.password = this.formUser.password;
+                                user.phone = this.formUser.phone;
+                                user.website = this.formUser.website;
+                                user.company.name = this.formUser.company.name;
+                                user.company.catchPhrase = this.formUser.company.catchPhrase;
+                                user.company.bs = this.formUser.company.bs;
+                            }
+                        });
+                        swal("Usuario editado","Se edito el usuario exitosamente", "success");
+                    }
+                },
+                destroyUser(id){
+                    swal({
+                        title: '¿Está seguro de eliminar este usuario?',
+                        text: "¡Una vez eliminado, no podrá revertir este cambio!",
+                        icon: 'warning',
+                        }).then((result) => {
+                        if (!result.isConfirmed) {
+                            this.users = this.users.filter(user => user.id !== id);
+                            swal(
+                            '¡Eliminado!',
+                            'El usuario ha sido eliminado',
+                            )
+                        }
+                    })
+                },
             },
             mounted(){
                 fetch("users.json")
